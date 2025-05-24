@@ -108,7 +108,7 @@ const forgotPassword = async (req: Request, res: Response) => {
             from: "Pilex from FlexyTasks <no-reply@em4521.pilexlaflex.com>",
             to: email,
             subject: "Password reset",
-            html: `<p>Follow this <span><a href=http://localhost:4200/resetpassword?token=${token}>link</a></span> to reset your password</p>`,
+            html: `<p>Follow this <span><a href=${process.env.REDIRECT_EMAIL}/resetpassword?token=${token}>link</a></span> to reset your password</p>`,
           });
         } catch (e) {
           console.log("e :>> ", e);
