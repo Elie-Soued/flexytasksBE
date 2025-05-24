@@ -117,7 +117,7 @@ const forgotPassword = async (req: Request, res: Response) => {
         res.json({
           code: 200,
           success:
-            "Please check your email. We sent you a link to reset your password :)",
+            "Please check your inbox (and maybe also your span). We sent you a link to reset your password :)",
         });
       } else {
         res.json({
