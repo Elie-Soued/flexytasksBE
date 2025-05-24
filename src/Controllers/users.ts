@@ -6,6 +6,7 @@ import { type user } from "../types";
 import db from "../db/databse";
 import { addDefaultTasks } from "./tasks";
 import { RunResult } from "sqlite3";
+import { transporter } from "../transporter";
 
 dotenv.config();
 
@@ -90,4 +91,74 @@ const hashPassword = async (password: string, res: Response) => {
   }
 };
 
-export { register, login };
+const forgotPassword = async (req: Request, res: Response) => {
+  const { username, email } = req.body;
+
+  try {
+    const user = await checkIfUserExists(username);
+
+    if (user) {
+      const token = jwt.sign(user, String(process.env.ACCESS_TOKEN_SECRET), {
+        expiresIn: "15m",
+      });
+
+      if (email === user.email) {
+        try {
+          await transporter.sendMail({
+            from: "Pilex from FlexyTasks <no-reply@em4521.pilexlaflex.com>",
+            to: email,
+            subject: "Password reset",
+            html: `<p>Follow this <span><a href=http://localhost:4200/resetpassword?token=${token}>link</a></span> to reset your password</p>`,
+          });
+        } catch (e) {
+          console.log("e :>> ", e);
+        }
+
+        res.json({
+          code: 200,
+          success:
+            "Please check your email. We sent you a link to reset your password :)",
+        });
+      } else {
+        res.json({
+          code: 404,
+          message: "The email account is wrong",
+        });
+      }
+    } else {
+      res.json({
+        code: 404,
+        message: "Invalid username",
+      });
+    }
+  } catch (error: unknown) {
+    res.json({
+      code: 500,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+const updatePassword = async (req: Request, res: Response) => {
+  const { updatedpassword } = req.body;
+  const { id } = req.body.user;
+  const hashedPassword = await hashPassword(updatedpassword, res);
+
+  try {
+    await db.run(
+      "UPDATE users SET password = (?) WHERE id = (?)",
+      [hashedPassword, id],
+      function (this: RunResult, err: Error | null) {
+        if (err) {
+          res.json({ code: 500, message: "password could not be updated" });
+        } else {
+          res.json({ code: 200, success: "password successfully updated" });
+        }
+      }
+    );
+  } catch (error) {
+    res.json({ code: 500, message: "could not update password" });
+  }
+};
+
+export { register, login, forgotPassword, updatePassword };

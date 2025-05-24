@@ -129,10 +129,18 @@ const updateTask = async (req: Request, res: Response) => {
 };
 
 const addDefaultTasks = async (res: Response, id: number) => {
+  const defaultTasks = [
+    "Give a foot massage to Pilex",
+    "Tell Pilex that he is the best developer ever",
+    "Find a job to Pilex",
+    "Find a wife to Pilex",
+    "Watch GOT with Pilex",
+  ];
+
   try {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < defaultTasks.length; i++) {
       await db.run("INSERT INTO tasks (content, userID) VALUES (?, ?)", [
-        "",
+        defaultTasks[i],
         id,
       ]);
     }
