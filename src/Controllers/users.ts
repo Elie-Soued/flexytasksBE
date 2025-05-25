@@ -26,9 +26,7 @@ const register = async (req: Request, res: Response) => {
         [username, fullname, hashedPassword, email],
         async function (this: RunResult, err: Error | null) {
           if (err) {
-            res
-              .status(500)
-              .json({ message: "user could be inserted for some reason" });
+            res.status(500).json({ message: "user insertion has failed" });
           }
           await addDefaultTasks(res, this.lastID);
           res.status(200).json({ message: "User registered successfully" });
