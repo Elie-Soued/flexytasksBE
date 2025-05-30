@@ -50,7 +50,11 @@ const login = async (req: Request, res: Response) => {
           user,
           String(process.env.ACCESS_TOKEN_SECRET)
         );
-        res.send({ accessToken });
+
+        res.json({
+          code: 200,
+          accessToken,
+        });
       } else {
         res.json({
           code: 404,
@@ -64,7 +68,10 @@ const login = async (req: Request, res: Response) => {
       });
     }
   } catch (error: unknown) {
-    res.status(500).json({ message: "Internal Server Error" });
+    res.json({
+      code: 500,
+      message: "Internal Server Error",
+    });
   }
 };
 
@@ -106,7 +113,7 @@ const forgotPassword = async (req: Request, res: Response) => {
             from: "Pilex from FlexyTasks <no-reply@em4521.pilexlaflex.com>",
             to: email,
             subject: "Password reset",
-            html: `<p>Follow this <span><a href=${process.env.REDIRECT_EMAIL}/resetpassword?token=${token}>link</a></span> to reset your password</p>`,
+            html: `<p>Follow this <span><a href=${process.env.REDIRECT_EMAIL}/updatepassword?token=${token}>link</a></span> to reset your password</p>`,
           });
         } catch (e) {
           console.log("e :>> ", e);
