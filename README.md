@@ -1,20 +1,29 @@
 ### FlexytasksBE
 
-**FlexytasksBE** is the backend of a full-stack Todo application.
+This repository is the backend of a todolist application.
 
-##### Overview
+#### Overview
 
-This is a **express** application written in **typescript**
+This project is built with `Express` and `Typescript`  
 
-##### Development
 
-To start the development server:
+#### Run the application
+
+To clone and run the backend:
 
 ```bash
+git clone https://github.com/Elie-Soued/flexytasksBE.git
+cd flexytasksBE
 ts-node src/index.ts
 
 ```
 
- ##### Databse
+#### Topics covered in this project
 
- The database that used is **sqlite**
+- CRUD operations saved in a `sqlite` database.
+- Autentication and Authorization using `JWT`
+- Password recovery using `nodemailer`and `sendgrid`
+
+
+
+
